@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class MainUi extends StatefulWidget {
-  const MainUi({Key key}) : super(key: key);
+  const MainUi({super.key});
 
   @override
   State<MainUi> createState() => _MainUiState();
@@ -212,7 +212,11 @@ class _MainUiState extends State<MainUi> {
 
 //*Function for the 5 little widgets after the Jin A studio
 
-Widget myIcon({Color widgetColor, IconData widgetIcon, String widgetText}) {
+Widget myIcon({
+  required Color widgetColor,
+  required IconData widgetIcon,
+  required String widgetText,
+}) {
   return Column(
     children: [
       Container(
@@ -240,12 +244,12 @@ Widget myIcon({Color widgetColor, IconData widgetIcon, String widgetText}) {
 
 //*Function for creating Classe Elite, etc
 Widget cardCurriculum({
-  Color widgetColorGrandiant1,
-  Color widgetColorGrandiant2,
-  String widgetLeftBoxName,
-  String widgetRightBoxName,
-  Color widgetColorLeftBoxPrice,
-  Color boxColorPurshase,
+  required Color widgetColorGrandiant1,
+  required Color widgetColorGrandiant2,
+  required String widgetLeftBoxName,
+  required String widgetRightBoxName,
+  required Color widgetColorLeftBoxPrice,
+  required Color boxColorPurshase,
 }) {
   return Padding(
     padding: const EdgeInsets.only(left: 20, right: 20, top: 20),

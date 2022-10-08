@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -22,7 +22,7 @@ class _HomePageState extends State<HomePage> {
                 Icons.flutter_dash,
                 size: 100,
               ),
-              SizedBox(height: 60),
+              const SizedBox(height: 60),
               const Text(
                 'Hello!',
                 style: TextStyle(
