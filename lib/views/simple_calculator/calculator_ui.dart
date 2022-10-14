@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class CalculatorUi extends StatefulWidget {
   const CalculatorUi({super.key});
@@ -36,7 +35,7 @@ class _CalculatorUiState extends State<CalculatorUi> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: const [
                     Text('RAD'),
                     Icon(
@@ -126,9 +125,9 @@ class _CalculatorUiState extends State<CalculatorUi> {
                 ),
                 Column(
                   children: [
-                    
                     signButton(text: 'DEL'),
-                    signButton(text: '÷'),
+                    // signButton(text: '÷'),
+                    signButton(text: ':'),
                     signButton(text: '×'),
                     signButton(text: '−'),
                     signButton(text: '+'),
