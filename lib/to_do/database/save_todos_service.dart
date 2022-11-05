@@ -4,7 +4,6 @@ import 'dart:developer';
 import 'package:auth_phone/to_do/constant/constant.dart';
 import 'package:auth_phone/to_do/database/database_todo.dart';
 import 'package:auth_phone/to_do/database/exceptions.dart';
-import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -13,14 +12,18 @@ class SaveTodosService {
   Database? _db;
   List<DatabaseTodo> _todos = [];
 
-  final _todoStreamController =
-      StreamController<List<DatabaseTodo>>.broadcast();
+  var _todoStreamController = StreamController<List<DatabaseTodo>>.broadcast();
 
   Stream<List<DatabaseTodo>> get allTodos => _todoStreamController.stream;
 
   //*Making it singleton
   static final SaveTodosService _shared = SaveTodosService._sharedInstance();
-  SaveTodosService._sharedInstance();
+  SaveTodosService._sharedInstance() {
+    _todoStreamController =
+        StreamController<List<DatabaseTodo>>.broadcast(onListen: () {
+      _todoStreamController.sink.add(_todos);
+    });
+  }
   factory SaveTodosService() => _shared;
 
   Future<void> _cashedTodo() async {
@@ -31,8 +34,12 @@ class SaveTodosService {
 
   //open the db
   Future<void> openDb() async {
-    if (_db != null) {
-      return;
+    try {
+      if (_db != null) {
+        throw DbIsAlreadyOpenedException;
+      }
+    } on DbIsAlreadyOpenedException {
+      await _db!.delete(todoTableName);
     }
     try {
       //connecting to our db
@@ -49,14 +56,14 @@ class SaveTodosService {
     }
   }
 
-  Future<void> _ensureDbIsOpen() async {
-    try {
-      await openDb();
-      log('Db opened');
-    } on DbIsAlreadyOpenedException {
-      log('Db already opened failed to open');
-    }
-  }
+  // Future<void> _ensureDbIsOpen() async {
+  //   try {
+  //     await openDb();
+  //     log('Db opened');
+  //   } on DbIsAlreadyOpenedException {
+  //     log('Db already opened failed to open');
+  //   }
+  // }
 
   Future<void> closeDb() async {
     if (_db != null) {
@@ -80,7 +87,6 @@ class SaveTodosService {
     required String todoText,
     required int isChecked,
   }) async {
-    await _ensureDbIsOpen();
     final db = _getOrThrowDb();
     final results = await db.query(
       todoTableName,
@@ -89,7 +95,8 @@ class SaveTodosService {
       whereArgs: [todoText],
     );
     if (results.isNotEmpty) {
-      throw DoNothingAction();
+      DatabaseTodo? todo;
+      await updateTodo(todo: todo!, text: todoText);
     }
     final todoId = await db.insert(todoTableName, {
       todoTextColumn: todoText,
@@ -109,7 +116,6 @@ class SaveTodosService {
     required DatabaseTodo todo,
     required String text,
   }) async {
-    await _ensureDbIsOpen();
     final db = _getOrThrowDb();
     await getTodos(todoText: todo.todoText);
     final updateCount = await db.update(todoTableName, {
@@ -129,7 +135,6 @@ class SaveTodosService {
     required DatabaseTodo todo,
     required String text,
   }) async {
-    await _ensureDbIsOpen();
     final db = _getOrThrowDb();
     await getTodos(todoText: todo.todoText);
     final updateCount = await db.update(todoTableName, {
@@ -146,7 +151,6 @@ class SaveTodosService {
   }
 
   Future<Iterable<DatabaseTodo>> getAllTodos() async {
-    await _ensureDbIsOpen();
     final db = _getOrThrowDb();
     final todos = await db.query(
       todoTableName,
@@ -156,7 +160,6 @@ class SaveTodosService {
   }
 
   Future<DatabaseTodo> getTodos({required String todoText}) async {
-    await _ensureDbIsOpen();
     final db = _getOrThrowDb();
     final results = await db.query(
       todoTableName,
@@ -176,7 +179,6 @@ class SaveTodosService {
 
   //Delete to do
   Future<void> deleteTodo({required String todoText}) async {
-    await _ensureDbIsOpen();
     final db = _getOrThrowDb();
     final results = await db.query(
       todoTableName,
@@ -203,7 +205,6 @@ class SaveTodosService {
   }
 
   Future<int> deleteAllTodos() async {
-    await _ensureDbIsOpen();
     final db = _getOrThrowDb();
     var allTodosNumberOfDeletion = await db.delete(todoTableName);
     _todos = [];

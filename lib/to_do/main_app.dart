@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:auth_phone/to_do/database/database_todo.dart';
 import 'package:auth_phone/to_do/database/save_todos_service.dart';
 import 'package:flutter/material.dart';
@@ -65,13 +67,13 @@ class _MainAppState extends State<MainApp> {
     _todoService = SaveTodosService();
     _textController = TextEditingController();
 
+    _todoService.openDb();
     super.initState();
   }
 
   @override
   void dispose() {
     _textController.dispose();
-    _todoService.closeDb();
     super.dispose();
   }
 
@@ -102,8 +104,11 @@ class _MainAppState extends State<MainApp> {
                       keyboardType: TextInputType.text,
                       controller: _textController,
                       keyboardAppearance: Brightness.dark,
-                      decoration:
-                          const InputDecoration(border: InputBorder.none),
+                      maxLines: 1,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Add todo',
+                      ),
                     ),
                   );
                 default:
@@ -138,7 +143,14 @@ class _MainAppState extends State<MainApp> {
             builder: (context, snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.waiting:
-                  return const Text('Waiting for todos');
+                case ConnectionState.active:
+                  if (snapshot.hasData) {
+                    final allTodos = snapshot.data as List<DatabaseTodo>;
+                    log(allTodos.toString());
+                    return const Text('Hello todos');
+                  } else {
+                    return const CircularProgressIndicator();
+                  }
                 default:
                   return const Center(
                     child: CircularProgressIndicator(),
