@@ -1,4 +1,4 @@
-import 'package:auth_phone/views/practicing_set_state.dart';
+import 'package:auth_phone/to_do/main_app.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -15,9 +15,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.orange,
+        primarySwatch: Colors.deepPurple,
       ),
-      home: const SetStatePractice(),
+      home: const MainApp(),
     );
   }
 }

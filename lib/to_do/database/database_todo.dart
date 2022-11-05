@@ -6,17 +6,17 @@ import 'package:flutter/material.dart';
 class DatabaseTodo {
   final int todoId;
   final String todoText;
-  final bool isChecked;
+  final int isChecked;
 
   const DatabaseTodo({
     required this.todoId,
     required this.todoText,
     required this.isChecked,
   });
-  DatabaseTodo.fromRow(Map<String, Object> map)
+  DatabaseTodo.fromRow(Map<String, Object?> map)
       : todoId = map[todoIdColumn] as int,
         todoText = map[todoTextColumn] as String,
-        isChecked = (map[todoIsCheckedColumn] as bool);
+        isChecked = (map[todoIsCheckedColumn] as int);
 
   @override
   String toString() =>

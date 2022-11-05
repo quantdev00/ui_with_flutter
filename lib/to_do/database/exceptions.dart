@@ -9,3 +9,9 @@ class CouldNotFindUserException implements Exception {}
 class CouldNotFindTodo implements Exception {}
 
 class CouldNotDeleteTodo implements Exception {}
+
+class CouldNotUpdateIsCheckedTodo implements Exception {}
+
+class TodoAlreadyExistException implements Exception {}
+
+class CouldNotUpdateTodo implements Exception {}
